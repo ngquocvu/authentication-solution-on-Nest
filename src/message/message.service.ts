@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { MessageDto } from '../../dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MessageService {
   constructor(private prisma: PrismaService) {}
-  async sendMessage(dto: any) {
+  async sendMessage(dto: MessageDto) {
     try {
       const message = await this.prisma.message.create({
         data: {
