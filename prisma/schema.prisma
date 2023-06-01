@@ -11,9 +11,10 @@ model User {
   id        Int      @id @default(autoincrement())
   hash      String
   email     String   @unique
-  name      String
+  name      String?
   createAt  DateTime @default(now())
-  updateAt  DateTime
+  isAdmin   Boolean @default(false)
+  updateAt  DateTime @updatedAt
   websiteId Int
   website   Website  @relation(fields: [websiteId], references: [id])
 
