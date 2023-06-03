@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Req } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { MessageDto } from '../../dto';
+import { JwtGuard } from 'src/auth/guard';
+import { Request } from 'express';
 
 @Controller('message')
 export class MessageController {
@@ -10,8 +12,11 @@ export class MessageController {
   sendMessage(@Body() dto: MessageDto) {
     return this.messageService.sendMessage(dto);
   }
+
+  @UseGuards(JwtGuard)
   @Get()
-  getAllMessage() {
+  getAllMessage(@Req() req: Request) {
+    console.log(req.user);
     return this.messageService.getAllMessages();
   }
 }

@@ -13,9 +13,9 @@ model User {
   email     String   @unique
   name      String?
   createAt  DateTime @default(now())
-  isAdmin   Boolean @default(false)
   updateAt  DateTime @updatedAt
   websiteId Int
+  isAdmin   Boolean  @default(false)
   website   Website  @relation(fields: [websiteId], references: [id])
 
   @@map("users")
