@@ -14,6 +14,7 @@ model User {
   name      String?
   createAt  DateTime @default(now())
   updateAt  DateTime @updatedAt
+  refreshToken String?
   websiteId Int
   isAdmin   Boolean  @default(false)
   website   Website  @relation(fields: [websiteId], references: [id])
