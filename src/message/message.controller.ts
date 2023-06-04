@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, UseGuards, Req } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { MessageDto } from '../../dto';
-import { Request } from 'express';
 import { AccessTokenGuard } from 'src/auth/guard';
+import { Request } from 'express';
 
 @Controller('message')
 export class MessageController {
@@ -15,7 +15,7 @@ export class MessageController {
 
   @UseGuards(AccessTokenGuard)
   @Get()
-  getAllMessage() {
-    return this.messageService.getAllMessages();
+  getAllMessage(@Req() req: Request) {
+    return this.messageService.getAllMessages(req.user['websiteId']);
   }
 }

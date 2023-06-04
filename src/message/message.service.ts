@@ -26,9 +26,13 @@ export class MessageService {
       throw new BadRequestException();
     }
   }
-  async getAllMessages() {
+  async getAllMessages(websiteId: number) {
     try {
-      const allMessages = await this.prisma.message.findMany();
+      const allMessages = await this.prisma.message.findMany({
+        where: {
+          websiteId: websiteId,
+        },
+      });
       return allMessages;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
