@@ -12,10 +12,18 @@ export class RefreshTokenStrategy extends PassportStrategy(
 ) {
   constructor(config: ConfigService, private prisma: PrismaService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        RefreshTokenStrategy.extractJWT,
+      ]),
       secretOrKey: config.get('JWT_REFRESH_SECRET'),
       passReqToCallback: true,
     });
+  }
+  private static extractJWT(req: Request): string | null {
+    if (req.cookies && req.cookies['auth-cookie']) {
+      return req.cookies['auth-cookie'];
+    }
+    return null;
   }
   async validate(req: Request, payload: { id: number; email: string }) {
     const user = await this.prisma.user.findUnique({
@@ -24,7 +32,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
       },
     });
     delete user.hash;
-    const refreshToken = req.get('Authorization').replace('Bearer', '').trim();
+    const refreshToken = req.cookies['auth-cookie'];
     return { ...user, refreshToken };
   }
 }

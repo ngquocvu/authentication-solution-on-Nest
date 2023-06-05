@@ -50,7 +50,9 @@ export class AuthService {
     });
   }
 
-  async signin(signinDTO: SigninDTO) {
+  async signin(
+    signinDTO: SigninDTO,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -103,17 +105,24 @@ export class AuthService {
   }
 
   async logout(id: number) {
-    await this.prisma.user.update({
-      where: {
-        id: id,
-      },
-      data: {
-        refreshToken: null,
-      },
-    });
+    try {
+      await this.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          refreshToken: null,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
-  async refreshTokens(id: number, refreshToken: string) {
+  async refreshTokens(
+    id: number,
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const user = await this.prisma.user.findUnique({ where: { id } });
       if (!user || !user.refreshToken) {
