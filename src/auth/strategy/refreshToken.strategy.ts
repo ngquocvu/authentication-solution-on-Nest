@@ -20,8 +20,8 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
   private static extractJWT(req: Request): string | null {
-    if (req.cookies && req.cookies['auth-cookie']) {
-      return req.cookies['auth-cookie'];
+    if (req.cookies && req.cookies['REFRESH_TOKEN']) {
+      return req.cookies['REFRESH_TOKEN'];
     }
     return null;
   }
@@ -32,7 +32,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
       },
     });
     delete user.hash;
-    const refreshToken = req.cookies['auth-cookie'];
+    const refreshToken = req.cookies['REFRESH_TOKEN'];
     return { ...user, refreshToken };
   }
 }
